@@ -137,6 +137,27 @@ pbd-lab/
 
 ---
 
+## 参考项目 (源码值得读)
+
+### open-slide (https://github.com/1weiho/open-slide)
+开源幻灯片框架,作者 1weiho。和我们 PbD 工具共享同一套核心架构:
+**点击 DOM 元素 → 弹出属性面板 → 改值 → AST 改写源码 → HMR 热更新**
+
+到 v1 做"点元素调动画参数"功能时,把这三个文件当教科书读:
+- `packages/core/src/app/components/inspector/inspector-panel.tsx` — 完整 shadcn 属性面板 (滑杆/调色盘/下拉/toggle)
+- `packages/core/src/app/lib/inspector/fiber.ts` — DOM 元素 → 源码行列号的双保险机制 (Vite 注入 attr + React Fiber 兜底)
+- `packages/core/src/vite/loc-tags-plugin.ts` — Vite 插件,编译期给每个 JSX 加 `data-slide-loc="line:col"`
+
+关键依赖映射 (我们要复用):
+- `@babel/parser` + `@babel/types` → AST 改写引擎
+- `@vitejs/plugin-react` → 自动加 `_debugSource` fiber 元数据
+- `radix-ui` + `shadcn` + `Slider`/`Select`/`ToggleGroup` → 面板 UI
+- 编辑期间注入 CSS 冻结动画 (`EDITING_FREEZE_CSS`) ← 我们更需要这个
+
+**注意**:open-slide 是工程项目,**没有发表论文**。这意味着如果我们把同样的交互范式用在"动画"语义上、加上正式的用户研究和 IR 形式化,**有论文空间**。
+
+---
+
 ## 工作节奏
 
 - 我每天投入 2-3 小时
